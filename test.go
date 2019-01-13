@@ -1,0 +1,58 @@
+// Package test provides convenience functions for testing
+package test
+
+import (
+	"reflect"
+	"testing"
+)
+
+// True ensures that val is true
+func True(t *testing.T, val bool) {
+	t.Helper()
+
+	if val != true {
+		t.Fatalf("Condition is %v, but it should be true", val)
+	}
+}
+
+// False ensures that val is false
+func False(t *testing.T, val bool) {
+	t.Helper()
+
+	if val != false {
+		t.Fatalf("Condition is %v, but it should be false", val)
+	}
+}
+
+// DeepEqual ensures that got DeepEquals expected
+func DeepEqual(t *testing.T, got, expected interface{}) {
+	t.Helper()
+
+	if !reflect.DeepEqual(got, expected) {
+		t.Fatalf("\ngot:      [%+v]\n"+
+			"expected: [%+v]", got, expected)
+	}
+}
+
+// NoError ensures that err is nil
+func NoError(t *testing.T, err error) {
+	t.Helper()
+
+	if err != nil {
+		t.Fatalf("err=%+v", err)
+	}
+}
+
+// Len ensures that len(arr) equals l
+func Len(t *testing.T, arr interface{}, l int) {
+	t.Helper()
+
+	arrV := reflect.ValueOf(arr)
+	if arrV.Kind() != reflect.Slice {
+		t.Fatalf("Second argument must be a slice. Was: %v", arrV.Kind())
+	}
+
+	if arrV.Len() != l {
+		t.Fatalf("len=%v, expected=%v", arrV.Len(), l)
+	}
+}
