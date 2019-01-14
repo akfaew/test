@@ -40,8 +40,8 @@ func FixtureHTTPExtra(t *testing.T, extra string, res *httptest.ResponseRecorder
 		t.Fatalf("err=%+v", err)
 	}
 
-	code := []byte(fmt.Sprintf("Code: %d\n", res.Code))
-	FixtureExtra(t, extra, append(code, body...))
+	code := fmt.Sprintf("Code: %d\n", res.Code)
+	FixtureExtra(t, extra, code+string(body))
 }
 
 // Fixture ensures that data is equal to what's stored on disk.
