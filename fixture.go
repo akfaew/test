@@ -57,12 +57,18 @@ func Fixture(t *testing.T, data interface{}) {
 func FixtureExtra(t *testing.T, extra string, data interface{}) {
 	t.Helper()
 
-	dataJson, err := json.Marshal(data)
-	NoError(t, err)
+	var dataProcessed []byte
+	if b, ok := data.(string); ok {
+		dataProcessed = []byte(b)
+	} else {
+		var err error
+		dataProcessed, err = json.Marshal(data)
+		NoError(t, err)
+	}
 
 	path := mkpath(t, extra)
 	if *regen {
-		if err := ioutil.WriteFile(path, []byte(dataJson), 0644); err != nil {
+		if err := ioutil.WriteFile(path, []byte(dataProcessed), 0644); err != nil {
 			t.Fatalf("ioutil.WriteFile(%s): err=%+v", path, err)
 		}
 		return
@@ -73,13 +79,13 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 		t.Fatalf("ioutil.ReadFile(%s): err=%+v", path, err)
 	}
 
-	if !bytes.Equal(dataJson, fileContent) {
+	if !bytes.Equal(dataProcessed, fileContent) {
 		tmp := "/tmp/" + strings.Replace(path, "/", "-", -1)
-		if err := ioutil.WriteFile(tmp, dataJson, 0644); err != nil {
+		if err := ioutil.WriteFile(tmp, dataProcessed, 0644); err != nil {
 			t.Fatalf("err=%+v", err)
 		}
 		t.Fatalf("Error comparing with fixture.\nFixture: <%s>\nWant:    <%s>\ndiff %s %s",
-			string(fileContent), dataJson, path, tmp)
+			string(fileContent), dataProcessed, path, tmp)
 	}
 }
 
