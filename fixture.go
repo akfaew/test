@@ -84,7 +84,7 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 		if err := ioutil.WriteFile(tmp, dataProcessed, 0644); err != nil {
 			t.Fatalf("err=%+v", err)
 		}
-		t.Fatalf("Error comparing with fixture.\nFixture: <%s>\nWant:    <%s>\ndiff %s %s",
+		t.Fatalf("Error comparing with fixture.\nFixture: <%s>\nGot:     <%s>\ndiff %s %s",
 			string(fileContent), dataProcessed, path, tmp)
 	}
 }
