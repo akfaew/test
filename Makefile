@@ -11,5 +11,9 @@ test-cover: fmt
 	go tool cover -func=coverage.out
 	go tool cover -html=coverage.out
 
+push:
+	git push
+	git push --tags
+
 clean:
 	rm coverage.out
