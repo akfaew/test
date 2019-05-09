@@ -27,8 +27,17 @@ func False(t *testing.T, val bool) {
 	}
 }
 
-// Equal ensures that two strings are equal
-func Equal(t *testing.T, got, expected string) {
+// EqualStr ensures that two strings are equal
+func EqualStr(t *testing.T, got, expected string) {
+	t.Helper()
+
+	if got != expected {
+		t.Fatalf("Expected %q to be equal to %q", got, expected)
+	}
+}
+
+// EqualInt ensures that two ints are equal
+func EqualInt(t *testing.T, got, expected int) {
 	t.Helper()
 
 	if got != expected {

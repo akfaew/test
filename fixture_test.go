@@ -8,14 +8,14 @@ import (
 )
 
 func Test_makeFixturePath(t *testing.T) {
-	Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath.fixture")
+	EqualStr(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath.fixture")
 
 	t.Run("Sub Test", func(t *testing.T) {
-		Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath-Sub_Test.fixture")
+		EqualStr(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath-Sub_Test.fixture")
 	})
 
 	t.Run("Sub Test With Extra", func(t *testing.T) {
-		Equal(t, makeFixturePath(t, "extra"), "testdata/output/Test_makeFixturePath-Sub_Test_With_Extra-extra.fixture")
+		EqualStr(t, makeFixturePath(t, "extra"), "testdata/output/Test_makeFixturePath-Sub_Test_With_Extra-extra.fixture")
 	})
 }
 
@@ -40,5 +40,5 @@ func Test_Fixture(t *testing.T) {
 
 func Test_InputFixture(t *testing.T) {
 	input := InputFixture(t, "input.fixture")
-	Equal(t, string(input), "foo")
+	EqualStr(t, string(input), "foo")
 }
