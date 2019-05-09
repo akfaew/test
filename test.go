@@ -29,7 +29,8 @@ func DeepEqual(t *testing.T, got, expected interface{}) {
 	t.Helper()
 
 	if !reflect.DeepEqual(got, expected) {
-		t.Fatalf("\ngot:      [%+v]\n"+
+		t.Fatalf("\n"+
+			"got:      [%+v]\n"+
 			"expected: [%+v]", got, expected)
 	}
 }
@@ -49,10 +50,10 @@ func Len(t *testing.T, arr interface{}, l int) {
 
 	arrV := reflect.ValueOf(arr)
 	if arrV.Kind() != reflect.Slice {
-		t.Fatalf("Second argument must be a slice. Was: %v", arrV.Kind())
+		t.Fatalf("Second argument must be a slice, and not %v", arrV.Kind())
 	}
 
 	if arrV.Len() != l {
-		t.Fatalf("len=%v, expected=%v", arrV.Len(), l)
+		t.Fatalf("Length of array is %v, but it should be %v", arrV.Len(), l)
 	}
 }
