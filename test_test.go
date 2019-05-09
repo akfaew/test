@@ -5,6 +5,7 @@ import "testing"
 func Test_Misc(t *testing.T) {
 	True(t, true)
 	False(t, false)
+	Equal(t, "string of text", "string of text")
 	DeepEqual(t, "string of text", "string of text")
 	DeepEqual(t, []string{"a", "b"}, []string{"a", "b"})
 	NoError(t, nil)

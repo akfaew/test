@@ -27,6 +27,15 @@ func False(t *testing.T, val bool) {
 	}
 }
 
+// Equal ensures that two strings are equal
+func Equal(t *testing.T, got, expected string) {
+	t.Helper()
+
+	if got != expected {
+		t.Fatalf("Expected %q to be equal to %q", got, expected)
+	}
+}
+
 // DeepEqual ensures that got DeepEquals expected
 func DeepEqual(t *testing.T, got, expected interface{}) {
 	t.Helper()
