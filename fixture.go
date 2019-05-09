@@ -81,10 +81,7 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 		if err := ioutil.WriteFile("/tmp/got", got, permissions); err != nil {
 			t.Fatalf("Error writing file /tmp/got: %v", err)
 		}
-		if err := ioutil.WriteFile("/tmp/want", want, permissions); err != nil {
-			t.Fatalf("Error writing file /tmp/want: %v", err)
-		}
-		t.Fatalf("Error comparing with fixture. See: diff /tmp/got /tmp/want")
+		t.Fatalf("Error comparing with fixture. See: diff /tmp/got %s", path)
 	}
 }
 
