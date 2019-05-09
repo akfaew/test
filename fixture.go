@@ -11,12 +11,15 @@ import (
 	"testing"
 )
 
+const (
+	permissions = 0644
+)
+
 var (
 	regen = flag.Bool("regen", false, "Regenerate fixtures")
 
-	InputPath   = "testdata/input/"
-	OutputPath  = "testdata/output/"
-	Permissions = 0644
+	FixtureInputPath  = "testdata/input/"
+	FixtureOutputPath = "testdata/output/"
 )
 
 // makeFixturePath makes a path from the test name, and optionally appends "extra".
@@ -24,7 +27,7 @@ func makeFixturePath(t *testing.T, extra string) string {
 	t.Helper()
 
 	name := strings.Replace(t.Name(), "/", "-", -1)
-	path := OutputPath + name
+	path := FixtureOutputPath + name
 	if extra != "" {
 		path += "-" + extra
 	}
@@ -65,7 +68,7 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 	path := makeFixturePath(t, extra)
 	// If -regen then write and return
 	if *regen {
-		if err := ioutil.WriteFile(path, []byte(got), Permissions); err != nil {
+		if err := ioutil.WriteFile(path, []byte(got), permissions); err != nil {
 			t.Fatalf("Error writing file %q: %v", path, err)
 		}
 		return
@@ -77,10 +80,10 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 	}
 
 	if !bytes.Equal(got, want) {
-		if err := ioutil.WriteFile("/tmp/got", got, Permissions); err != nil {
+		if err := ioutil.WriteFile("/tmp/got", got, permissions); err != nil {
 			t.Fatalf("Error writing file /tmp/got: %v", err)
 		}
-		if err := ioutil.WriteFile("/tmp/want", want, Permissions); err != nil {
+		if err := ioutil.WriteFile("/tmp/want", want, permissions); err != nil {
 			t.Fatalf("Error writing file /tmp/want: %v", err)
 		}
 		t.Fatalf("Error comparing with fixture. See: diff /tmp/got /tmp/want")

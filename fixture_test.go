@@ -7,36 +7,25 @@ import (
 	"time"
 )
 
-func Test_mkpath(t *testing.T) {
-	path1 := mkpath(t, "")
-	if path1 != "testdata/output/Test_mkpath.fixture" {
-		t.Fatalf(path1)
-	}
+func Test_makeFixturePath(t *testing.T) {
+	Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath.fixture")
 
 	t.Run("Sub Test", func(t *testing.T) {
-		path2 := mkpath(t, "")
-		if path2 != "testdata/output/Test_mkpath-Sub_Test.fixture" {
-			t.Fatalf(path2)
-		}
+		Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath-Sub_Test.fixture")
 	})
 
 	t.Run("Sub Test With Extra", func(t *testing.T) {
-		path3 := mkpath(t, "extra")
-		if path3 != "testdata/output/Test_mkpath-Sub_Test_With_Extra-extra.fixture" {
-			t.Fatalf(path3)
-		}
+		Equal(t, makeFixturePath(t, "extra"), "testdata/output/Test_makeFixturePath-Sub_Test_With_Extra-extra.fixture")
 	})
 }
 
 func Test_Fixture(t *testing.T) {
 	t.Run("bytes", func(t *testing.T) {
-		b := []byte("an array of bytes")
-		Fixture(t, b)
+		Fixture(t, []byte("an array of bytes"))
 	})
 
 	t.Run("string", func(t *testing.T) {
-		b := "a string of text"
-		Fixture(t, b)
+		Fixture(t, "a string of text")
 	})
 
 	t.Run("regen", func(t *testing.T) {
@@ -45,6 +34,11 @@ func Test_Fixture(t *testing.T) {
 		Fixture(t, b)
 		*regen = false
 		Fixture(t, b)
-		os.Remove(mkpath(t, ""))
+		os.Remove(makeFixturePath(t, ""))
 	})
+}
+
+func Test_InputFixture(t *testing.T) {
+	input := InputFixture(t, "input.fixture")
+	Equal(t, string(input), "foo")
 }
