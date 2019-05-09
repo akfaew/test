@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"io/ioutil"
-	"net/http/httptest"
 	"strings"
 	"testing"
 )
@@ -88,26 +86,6 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 		}
 		t.Fatalf("Error comparing with fixture. See: diff /tmp/got /tmp/want")
 	}
-}
-
-// FixtureHTTP is like Fixture, except it reads the data from 'res' and treats it as a string type.
-func FixtureHTTP(t *testing.T, res *httptest.ResponseRecorder) {
-	t.Helper()
-
-	FixtureHTTPExtra(t, "", res)
-}
-
-// FixtureHTTPExtra is like FixtureExtra, except it reads the data from 'res' and treats it as a string type.
-func FixtureHTTPExtra(t *testing.T, extra string, res *httptest.ResponseRecorder) {
-	t.Helper()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatalf("Error reading from ResponseRecorder: %v", err)
-	}
-
-	code := fmt.Sprintf("Code: %d\n\n", res.Code)
-	FixtureExtra(t, extra, code+string(body))
 }
 
 // InputFixture returns the contents of a fixture file
