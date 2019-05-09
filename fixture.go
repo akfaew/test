@@ -11,13 +11,20 @@ import (
 	"testing"
 )
 
-var regen = flag.Bool("regen", false, "Regenerate fixtures")
+var (
+	regen = flag.Bool("regen", false, "Regenerate fixtures")
 
-func mkpath(t *testing.T, extra string) string {
+	InputPath   = "testdata/input/"
+	OutputPath  = "testdata/output/"
+	Permissions = 0644
+)
+
+// makeFixturePath makes a path from the test name, and optionally appends "extra".
+func makeFixturePath(t *testing.T, extra string) string {
 	t.Helper()
 
 	name := strings.Replace(t.Name(), "/", "-", -1)
-	path := "testdata/output/" + name
+	path := OutputPath + name
 	if extra != "" {
 		path += "-" + extra
 	}
@@ -26,26 +33,11 @@ func mkpath(t *testing.T, extra string) string {
 	return path
 }
 
-func FixtureHTTP(t *testing.T, res *httptest.ResponseRecorder) {
-	t.Helper()
-
-	FixtureHTTPExtra(t, "", res)
-}
-
-func FixtureHTTPExtra(t *testing.T, extra string, res *httptest.ResponseRecorder) {
-	t.Helper()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatalf("err=%+v", err)
-	}
-
-	code := fmt.Sprintf("Code: %d\n", res.Code)
-	FixtureExtra(t, extra, code+string(body))
-}
-
-// Fixture ensures that data is equal to what's stored on disk.
-// For testing multiple fixtures in one test use FixtureExtra()
+// Fixture ensures that 'data' is equal to what's stored on disk.
+//
+// If 'data' is a string it gets written verbatim, otherwise it's json-encoded.
+//
+// The filename of the fixture is generated from the test name. To use multiple fixtures in one test see FixtureExtra()
 func Fixture(t *testing.T, data interface{}) {
 	t.Helper()
 
@@ -53,49 +45,75 @@ func Fixture(t *testing.T, data interface{}) {
 }
 
 // FixtureExtra ensures that data is equal to what's stored on disk.
-// The value in extra gets appended to the filename used.
+//
+// If 'data' is a string it gets written verbatim, otherwise it's json-encoded.
+//
+// The filename of the fixture is generated from the test name with 'extra' appended.
 func FixtureExtra(t *testing.T, extra string, data interface{}) {
 	t.Helper()
 
-	var dataProcessed []byte
+	// Write strings verbatim, otherwise json-encode.
+	var got []byte
 	if b, ok := data.(string); ok {
-		dataProcessed = []byte(b)
+		got = []byte(b)
 	} else {
 		var err error
-		dataProcessed, err = json.Marshal(data)
+		got, err = json.Marshal(data)
 		NoError(t, err)
 	}
 
-	path := mkpath(t, extra)
+	path := makeFixturePath(t, extra)
+	// If -regen then write and return
 	if *regen {
-		if err := ioutil.WriteFile(path, []byte(dataProcessed), 0644); err != nil {
-			t.Fatalf("ioutil.WriteFile(%s): err=%+v", path, err)
+		if err := ioutil.WriteFile(path, []byte(got), Permissions); err != nil {
+			t.Fatalf("Error writing file %q: %v", path, err)
 		}
 		return
 	}
 
-	fileContent, err := ioutil.ReadFile(path)
+	want, err := ioutil.ReadFile(path)
 	if err != nil {
-		t.Fatalf("ioutil.ReadFile(%s): err=%+v", path, err)
+		t.Fatalf("Error reading file %q: %v", path, err)
 	}
 
-	if !bytes.Equal(dataProcessed, fileContent) {
-		tmp := "/tmp/" + strings.Replace(path, "/", "-", -1)
-		if err := ioutil.WriteFile(tmp, dataProcessed, 0644); err != nil {
-			t.Fatalf("err=%+v", err)
+	if !bytes.Equal(got, want) {
+		if err := ioutil.WriteFile("/tmp/got", got, Permissions); err != nil {
+			t.Fatalf("Error writing file /tmp/got: %v", err)
 		}
-		t.Fatalf("Error comparing with fixture.\nFixture: <%s>\nGot:     <%s>\ndiff %s %s",
-			string(fileContent), dataProcessed, path, tmp)
+		if err := ioutil.WriteFile("/tmp/want", want, Permissions); err != nil {
+			t.Fatalf("Error writing file /tmp/want: %v", err)
+		}
+		t.Fatalf("Error comparing with fixture. See: diff /tmp/got /tmp/want")
 	}
 }
 
-// InputFixture returns the contents of a fixture file
-func InputFixture(t *testing.T, name string) []byte {
+// FixtureHTTP is like Fixture, except it reads the data from 'res' and treats it as a string type.
+func FixtureHTTP(t *testing.T, res *httptest.ResponseRecorder) {
 	t.Helper()
 
-	input, err := ioutil.ReadFile("testdata/input/" + name)
+	FixtureHTTPExtra(t, "", res)
+}
+
+// FixtureHTTPExtra is like FixtureExtra, except it reads the data from 'res' and treats it as a string type.
+func FixtureHTTPExtra(t *testing.T, extra string, res *httptest.ResponseRecorder) {
+	t.Helper()
+
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		t.Fatalf("err=%+v", err)
+		t.Fatalf("Error reading from ResponseRecorder: %v", err)
+	}
+
+	code := fmt.Sprintf("Code: %d\n\n", res.Code)
+	FixtureExtra(t, extra, code+string(body))
+}
+
+// InputFixture returns the contents of a fixture file
+func InputFixture(t *testing.T, filename string) []byte {
+	t.Helper()
+
+	input, err := ioutil.ReadFile(FixtureInputPath + filename)
+	if err != nil {
+		t.Fatalf("Error reading fixture: %v", err)
 	}
 
 	return input

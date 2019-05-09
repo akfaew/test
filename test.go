@@ -1,4 +1,7 @@
 // Package test provides convenience functions for testing
+//
+// Fixtures are written to "testdata/output/" and read from "testdata/input/", configurable with
+// OutputPath and InputPath respectively.
 package test
 
 import (
