@@ -32,7 +32,7 @@ func EqualStr(t *testing.T, got, expected string) {
 	t.Helper()
 
 	if got != expected {
-		t.Fatalf("Expected %q to be equal to %q", got, expected)
+		t.Fatalf("Got: %q, expected: %q", got, expected)
 	}
 }
 
@@ -41,7 +41,7 @@ func EqualInt(t *testing.T, got, expected int) {
 	t.Helper()
 
 	if got != expected {
-		t.Fatalf("Expected %q to be equal to %q", got, expected)
+		t.Fatalf("Got: \"%d\", expected: \"%d\"", got, expected)
 	}
 }
 
