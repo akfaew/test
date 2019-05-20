@@ -13,7 +13,7 @@ import (
 func True(t *testing.T, val bool) {
 	t.Helper()
 
-	if val != true {
+	if !val {
 		t.Fatalf("Condition is %v, but it should be true", val)
 	}
 }
@@ -22,7 +22,7 @@ func True(t *testing.T, val bool) {
 func False(t *testing.T, val bool) {
 	t.Helper()
 
-	if val != false {
+	if val {
 		t.Fatalf("Condition is %v, but it should be false", val)
 	}
 }
