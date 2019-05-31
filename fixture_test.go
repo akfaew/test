@@ -42,3 +42,21 @@ func Test_InputFixture(t *testing.T) {
 	input := InputFixture(t, "input.fixture")
 	EqualStr(t, string(input), "foo")
 }
+
+func Test_InputFixtureJson(t *testing.T) {
+	a := struct {
+		A string
+		B string
+		C int
+	}{
+		"aaa", "bbb", 123,
+	}
+
+	b := struct {
+		A string
+		B string
+		C int
+	}{}
+	InputFixtureJson(t, "struct.json", &b)
+	DeepEqual(t, a, b)
+}

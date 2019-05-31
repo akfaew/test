@@ -96,3 +96,11 @@ func InputFixture(t *testing.T, filename string) []byte {
 
 	return input
 }
+
+// InputFixtureJson returns the contents of a json fixture file, and unmarshals it
+func InputFixtureJson(t *testing.T, filename string, v interface{}) {
+	t.Helper()
+
+	data := InputFixture(t, filename)
+	NoError(t, json.Unmarshal(data, v))
+}
