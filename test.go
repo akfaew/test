@@ -65,16 +65,20 @@ func NoError(t *testing.T, err error) {
 	}
 }
 
-// Len ensures that len(arr) equals l
-func Len(t *testing.T, arr interface{}, l int) {
+// Len ensures that len(obj) equals l
+func Len(t *testing.T, obj interface{}, l int) {
 	t.Helper()
 
-	arrV := reflect.ValueOf(arr)
-	if arrV.Kind() != reflect.Slice {
-		t.Fatalf("Second argument must be a slice, and not %v", arrV.Kind())
-	}
-
-	if arrV.Len() != l {
-		t.Fatalf("Length of array is %v, but it should be %v", arrV.Len(), l)
+	objV := reflect.ValueOf(obj)
+	if objV.Kind() == reflect.Slice {
+		if objV.Len() != l {
+			t.Fatalf("Length of array is %v, but it should be %v", objV.Len(), l)
+		}
+	} else if objV.Kind() == reflect.Map {
+		if objV.Len() != l {
+			t.Fatalf("Length of map is %v, but it should be %v", objV.Len(), l)
+		}
+	} else {
+		t.Fatalf("Second argument must be a slice or a map, and not %v", objV.Kind())
 	}
 }

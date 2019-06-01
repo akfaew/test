@@ -12,4 +12,6 @@ func Test_Misc(t *testing.T) {
 	NoError(t, nil)
 	Len(t, []string{"a", "b"}, 2)
 	Len(t, []int{}, 0)
+	Len(t, map[string]string{"a": "a", "b": "b"}, 2)
+	Len(t, map[string]string{}, 0)
 }
