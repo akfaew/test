@@ -2,7 +2,7 @@ package test
 
 import "testing"
 
-func Test_Misc(t *testing.T) {
+func TestTest(t *testing.T) {
 	True(t, true)
 	False(t, false)
 	EqualStr(t, "string of text", "string of text")
@@ -14,4 +14,7 @@ func Test_Misc(t *testing.T) {
 	Len(t, []int{}, 0)
 	Len(t, map[string]string{"a": "a", "b": "b"}, 2)
 	Len(t, map[string]string{}, 0)
+
+	IsNil(t, nil)
+	IsNotNil(t, 5)
 }

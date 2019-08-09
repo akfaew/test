@@ -56,6 +56,24 @@ func DeepEqual(t *testing.T, got, expected interface{}) {
 	}
 }
 
+// IsNil ensures that val is nil
+func IsNil(t *testing.T, val interface{}) {
+	t.Helper()
+
+	if val != nil {
+		t.Fatalf("val=%+v", val)
+	}
+}
+
+// IsNotNil ensures that val is not nil
+func IsNotNil(t *testing.T, val interface{}) {
+	t.Helper()
+
+	if val == nil {
+		t.Fatalf("val is nil")
+	}
+}
+
 // NoError ensures that err is nil
 func NoError(t *testing.T, err error) {
 	t.Helper()
