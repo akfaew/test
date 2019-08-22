@@ -20,6 +20,10 @@ var (
 	FixtureOutputPath = "testdata/output/"
 )
 
+func Regen() bool {
+	return *regen
+}
+
 // makeFixturePath makes a path from the test name, and optionally appends "extra".
 func makeFixturePath(t *testing.T, extra string) string {
 	t.Helper()

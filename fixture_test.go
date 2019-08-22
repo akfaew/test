@@ -30,10 +30,15 @@ func Test_Fixture(t *testing.T) {
 
 	t.Run("regen", func(t *testing.T) {
 		b := []byte(fmt.Sprintf("%v", time.Now()))
+
 		*regen = true
+		True(t, Regen())
 		Fixture(t, b)
+
 		*regen = false
+		False(t, Regen())
 		Fixture(t, b)
+
 		os.Remove(makeFixturePath(t, ""))
 	})
 }
