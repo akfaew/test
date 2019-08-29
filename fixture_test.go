@@ -28,6 +28,16 @@ func Test_Fixture(t *testing.T) {
 		Fixture(t, "a string of text")
 	})
 
+	t.Run("struct", func(t *testing.T) {
+		Fixture(t, struct {
+			A string
+			B int
+		}{
+			"something",
+			1234,
+		})
+	})
+
 	t.Run("regen", func(t *testing.T) {
 		b := []byte(fmt.Sprintf("%v", time.Now()))
 

@@ -63,7 +63,7 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 		got = []byte(b)
 	} else {
 		var err error
-		got, err = json.Marshal(data)
+		got, err = json.MarshalIndent(data, "", "\t")
 		NoError(t, err)
 	}
 
