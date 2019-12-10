@@ -46,7 +46,7 @@ func (l *Log) Fixture(t *testing.T) {
 	l.Lock()
 	defer l.Unlock()
 
-	Fixture(t, l.buf.String())
+	FixtureExtra(t, "log", l.buf.String())
 }
 
 func (l *Log) Contains(t *testing.T, substr string) {
