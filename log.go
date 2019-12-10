@@ -19,6 +19,13 @@ func (l *Log) Write(data []byte) (n int, err error) {
 	return l.buf.Write(data)
 }
 
+func (l *Log) Reset() {
+	l.Lock()
+	defer l.Unlock()
+
+	l.buf.Reset()
+}
+
 func (l *Log) Get() []byte {
 	l.Lock()
 	defer l.Unlock()
