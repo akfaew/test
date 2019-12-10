@@ -26,11 +26,18 @@ func (l *Log) Reset() {
 	l.buf.Reset()
 }
 
-func (l *Log) Get() []byte {
+func (l *Log) Bytes() []byte {
 	l.Lock()
 	defer l.Unlock()
 
 	return l.buf.Bytes()
+}
+
+func (l *Log) String() string {
+	l.Lock()
+	defer l.Unlock()
+
+	return l.buf.String()
 }
 
 func (l *Log) Fixture(t *testing.T) {
