@@ -5,17 +5,19 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func Test_makeFixturePath(t *testing.T) {
-	EqualStr(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath.fixture")
+	require.Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath.fixture")
 
 	t.Run("Sub Test", func(t *testing.T) {
-		EqualStr(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath-Sub_Test.fixture")
+		require.Equal(t, makeFixturePath(t, ""), "testdata/output/Test_makeFixturePath-Sub_Test.fixture")
 	})
 
 	t.Run("Sub Test With Extra", func(t *testing.T) {
-		EqualStr(t, makeFixturePath(t, "extra"), "testdata/output/Test_makeFixturePath-Sub_Test_With_Extra-extra.fixture")
+		require.Equal(t, makeFixturePath(t, "extra"), "testdata/output/Test_makeFixturePath-Sub_Test_With_Extra-extra.fixture")
 	})
 }
 
@@ -42,11 +44,11 @@ func Test_Fixture(t *testing.T) {
 		b := []byte(fmt.Sprintf("%v", time.Now()))
 
 		*regen = true
-		True(t, Regen())
+		require.True(t, Regen())
 		Fixture(t, b)
 
 		*regen = false
-		False(t, Regen())
+		require.False(t, Regen())
 		Fixture(t, b)
 
 		os.Remove(makeFixturePath(t, ""))
@@ -55,7 +57,7 @@ func Test_Fixture(t *testing.T) {
 
 func Test_InputFixture(t *testing.T) {
 	input := InputFixture(t, "input.fixture")
-	EqualStr(t, string(input), "foo")
+	require.Equal(t, string(input), "foo")
 }
 
 func Test_InputFixtureJson(t *testing.T) {
@@ -73,5 +75,5 @@ func Test_InputFixtureJson(t *testing.T) {
 		C int
 	}{}
 	InputFixtureJson(t, "struct.json", &b)
-	DeepEqual(t, a, b)
+	require.Equal(t, a, b)
 }

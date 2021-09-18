@@ -5,6 +5,8 @@ import (
 	"strings"
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 type Log struct {
@@ -41,7 +43,7 @@ func (l *Log) Contains(t *testing.T, substr string) {
 	l.Lock()
 	defer l.Unlock()
 
-	True(t, strings.Contains(l.buf.String(), substr))
+	require.True(t, strings.Contains(l.buf.String(), substr))
 }
 
 func (l *Log) DoesntContain(t *testing.T, substr string) {
@@ -50,5 +52,5 @@ func (l *Log) DoesntContain(t *testing.T, substr string) {
 	l.Lock()
 	defer l.Unlock()
 
-	False(t, strings.Contains(l.buf.String(), substr))
+	require.False(t, strings.Contains(l.buf.String(), substr))
 }

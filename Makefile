@@ -20,3 +20,8 @@ push: test
 
 clean:
 	rm coverage.out
+
+update:
+	go get -u
+	go mod tidy
+	go mod verify

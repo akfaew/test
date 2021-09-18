@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -64,7 +66,7 @@ func FixtureExtra(t *testing.T, extra string, data interface{}) {
 	} else {
 		var err error
 		got, err = json.MarshalIndent(data, "", "\t")
-		NoError(t, err)
+		require.NoError(t, err)
 	}
 
 	path := makeFixturePath(t, extra)
@@ -106,5 +108,5 @@ func InputFixtureJson(t *testing.T, filename string, v interface{}) {
 	t.Helper()
 
 	data := InputFixture(t, filename)
-	NoError(t, json.Unmarshal(data, v))
+	require.NoError(t, json.Unmarshal(data, v))
 }
