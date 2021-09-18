@@ -21,11 +21,25 @@ func (l *Log) Write(data []byte) (n int, err error) {
 	return l.buf.Write(data)
 }
 
-func (l *Log) Get() []byte {
+func (l *Log) Reset() {
+	l.Lock()
+	defer l.Unlock()
+
+	l.buf.Reset()
+}
+
+func (l *Log) Bytes() []byte {
 	l.Lock()
 	defer l.Unlock()
 
 	return l.buf.Bytes()
+}
+
+func (l *Log) String() string {
+	l.Lock()
+	defer l.Unlock()
+
+	return l.buf.String()
 }
 
 func (l *Log) Fixture(t *testing.T) {
@@ -34,7 +48,7 @@ func (l *Log) Fixture(t *testing.T) {
 	l.Lock()
 	defer l.Unlock()
 
-	Fixture(t, l.buf.String())
+	FixtureExtra(t, "log", l.buf.String())
 }
 
 func (l *Log) Contains(t *testing.T, substr string) {

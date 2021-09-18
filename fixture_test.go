@@ -40,6 +40,7 @@ func Test_Fixture(t *testing.T) {
 		})
 	})
 
+	r := *regen
 	t.Run("regen", func(t *testing.T) {
 		b := []byte(fmt.Sprintf("%v", time.Now()))
 
@@ -53,6 +54,7 @@ func Test_Fixture(t *testing.T) {
 
 		os.Remove(makeFixturePath(t, ""))
 	})
+	*regen = r
 }
 
 func Test_InputFixture(t *testing.T) {
